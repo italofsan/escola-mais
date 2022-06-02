@@ -7,6 +7,7 @@ import { User } from "../../types";
 import { CardUser } from "../../components/CardUser";
 
 import { useStyles } from "./styles";
+import { errorMessage } from "../../components/Messages";
 
 export const Home = () => {
   const classes = useStyles();
@@ -18,6 +19,7 @@ export const Home = () => {
       setUsers(data);
     } catch (error) {
       console.log(error);
+      errorMessage("It wasn't possible fetch users");
     }
   };
 
@@ -28,7 +30,7 @@ export const Home = () => {
   return (
     <Grid container>
       <Grid item xs={12} className={classes.titleContainer}>
-        <Typography>To do list</Typography>
+        <Typography className={classes.titleText}>To do list</Typography>
       </Grid>
 
       <Grid container>

@@ -6,5 +6,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "center",
     },
+    titleText: {
+      fontSize: 42,
+      fontWeight: 700,
+
+      marginTop: 12,
+    },
   })
 );
