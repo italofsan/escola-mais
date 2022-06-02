@@ -5,22 +5,18 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import { useTodo } from "../../hooks/useTodo";
 import { Todo } from "../../types";
 
 import { useStyles, GreenCheckbox } from "./styles";
 
 type CardTodoProps = {
   todo: Todo;
-  handleUpdateTodo: (todoSelected: Todo) => Promise<void>;
-  handleDeleteTodo: (todoId: number) => Promise<void>;
 };
 
-export const CardToDo = ({
-  todo,
-  handleUpdateTodo,
-  handleDeleteTodo,
-}: CardTodoProps) => {
+export const CardToDo = ({ todo }: CardTodoProps) => {
   const classes = useStyles();
+  const { handleUpdateTodo, handleDeleteTodo } = useTodo();
 
   return (
     <Card className={classes.card}>
