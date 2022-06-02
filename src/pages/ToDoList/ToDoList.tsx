@@ -13,6 +13,7 @@ import { Todo } from "../../types";
 import { CardToDo } from "../../components/CardToDo";
 
 import { useStyles } from "./styles";
+import { errorMessage, successMessage } from "../../components/Messages";
 
 export const ToDoList = () => {
   const { id } = useParams<string>();
@@ -45,11 +46,12 @@ export const ToDoList = () => {
         completed: false,
         userId: id,
       });
-      console.log("To do added", data);
       setTodoList([...todoList, data]);
       setTodoTitle("");
+      successMessage("Todo created gracefully!");
     } catch (error) {
       console.log(error);
+      errorMessage("It wasn't possible create a new todo!");
     }
   };
 
@@ -70,15 +72,16 @@ export const ToDoList = () => {
         }
       });
       setTodoList(todoListCopy);
+      successMessage("Todo updated gracefully!");
     } catch (error) {
       console.log(error);
+      errorMessage("It wasn't possible update the todo!");
     }
   };
 
   const handleDeleteTodo = async (todoId: number) => {
     try {
-      const { data } = await api.delete(`/todos/${todoId}`);
-      console.log("To do Deleted", data);
+      await api.delete(`/todos/${todoId}`);
       let todoListCopy = [...todoList];
       todoListCopy = todoListCopy.filter((todo) => {
         if (todo.id !== todoId) {
@@ -86,8 +89,11 @@ export const ToDoList = () => {
         }
       });
       setTodoList(todoListCopy);
+      successMessage("Todo deleted!");
+      errorMessage("Todo created gracefully!");
     } catch (error) {
       console.log(error);
+      errorMessage("It wasn't possible delete the todo!");
     }
   };
 

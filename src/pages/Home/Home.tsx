@@ -1,6 +1,5 @@
 import { Grid, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { api } from "../../services/api";
 import { User } from "../../types";
@@ -10,7 +9,6 @@ import { CardUser } from "../../components/CardUser";
 import { useStyles } from "./styles";
 
 export const Home = () => {
-  const navigate = useNavigate();
   const classes = useStyles();
   const [users, setUsers] = useState<User[]>([]);
 
@@ -26,10 +24,6 @@ export const Home = () => {
   useEffect(() => {
     getUsers();
   }, []);
-
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
 
   return (
     <Grid container>
