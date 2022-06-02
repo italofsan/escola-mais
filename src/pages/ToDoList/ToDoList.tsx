@@ -1,35 +1,22 @@
 import { FormEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
+import { Grid, IconButton, TextField } from "@material-ui/core";
 import {
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  TextField,
-  Typography,
-  withStyles,
-} from "@material-ui/core";
-import { CheckboxProps } from "@material-ui/core/Checkbox";
-import { Add as AddIcon, Delete as DeleteIcon } from "@material-ui/icons";
-import { green } from "@material-ui/core/colors";
+  Add as AddIcon,
+  ArrowBackIos as ArrowBackIosIcon,
+} from "@material-ui/icons";
 
 import { api } from "../../services/api";
 import { Todo } from "../../types";
 
+import { CardToDo } from "../../components/CardToDo";
+
 import { useStyles } from "./styles";
 
-const GreenCheckbox = withStyles({
-  root: {
-    color: green[400],
-    "&$checked": {
-      color: green[600],
-    },
-  },
-  checked: {},
-})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
-
-export const User = () => {
+export const ToDoList = () => {
   const { id } = useParams<string>();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [todoList, setTodoList] = useState<Todo[]>([]);
@@ -68,7 +55,7 @@ export const User = () => {
 
   const handleUpdateTodo = async (todoSelected: Todo) => {
     try {
-      const { data } = await api.patch(`/todos/${todoSelected.id}`, {
+      await api.patch(`/todos/${todoSelected.id}`, {
         completed: !todoSelected.completed,
       });
       let todoListCopy = [...todoList];
@@ -105,50 +92,46 @@ export const User = () => {
   };
 
   return (
-    <div>
-      <form
-        onSubmit={(e: FormEvent) => {
-          e.preventDefault();
-          handleAddTodo(todoTitle);
-        }}
-      >
-        <TextField
-          label="Create a new todo"
-          value={todoTitle}
-          onChange={(e) => setTodoTitle(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <IconButton size="small" onClick={() => handleAddTodo(todoTitle)}>
-                <AddIcon />
-              </IconButton>
-            ),
+    <Grid container>
+      <Grid item xs={12} className={classes.goBackContainer}>
+        <IconButton size="small" onClick={() => navigate("/")}>
+          <ArrowBackIosIcon />
+        </IconButton>
+      </Grid>
+      <Grid item xs={12} className={classes.addTodoContainer}>
+        <form
+          onSubmit={(e: FormEvent) => {
+            e.preventDefault();
+            handleAddTodo(todoTitle);
           }}
-        />
-      </form>
+        >
+          <TextField
+            label="Create a new todo"
+            value={todoTitle}
+            onChange={(e) => setTodoTitle(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  size="small"
+                  onClick={() => handleAddTodo(todoTitle)}
+                >
+                  <AddIcon />
+                </IconButton>
+              ),
+            }}
+          />
+        </form>
+      </Grid>
+
       {todoList.map((todo, index) => (
-        <div key={index} className={classes.todoContainer}>
-          <div className={classes.todoContent}>
-            <FormControlLabel
-              control={
-                <GreenCheckbox
-                  checked={todo.completed}
-                  onChange={() => handleUpdateTodo(todo)}
-                />
-              }
-              label=""
-            />
-          </div>
-          <Typography>{todo.title}</Typography>
-          {/* <Typography onClick={() => handleUpdateTodo(todo)}>
-              {todo.completed ? "Completed" : "Pending"}
-            </Typography> */}
-          <div>
-            <IconButton size="small" onClick={() => handleDeleteTodo(todo.id)}>
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </div>
+        <Grid item xs={12} md={4} lg={3} key={index}>
+          <CardToDo
+            todo={todo}
+            handleUpdateTodo={handleUpdateTodo}
+            handleDeleteTodo={handleDeleteTodo}
+          />
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
